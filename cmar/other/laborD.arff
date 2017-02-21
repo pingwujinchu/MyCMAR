@@ -1,0 +1,78 @@
+@relation labor-weka.filters.supervised.attribute.Discretize-Rfirst-last
+
+@attribute duration {'\'All\''}
+@attribute wage-increase-first-year {'\'(-inf-2.65]\'','\'(2.65-inf)\''}
+@attribute wage-increase-second-year {'\'(-inf-3.25]\'','\'(3.25-inf)\''}
+@attribute wage-increase-third-year {'\'(-inf-3.25]\'','\'(3.25-inf)\''}
+@attribute cost-of-living-adjustment {none,tcf,tc}
+@attribute working-hours {'\'All\''}
+@attribute pension {none,ret_allw,empl_contr}
+@attribute standby-pay {'\'(-inf-6]\'','\'(6-inf)\''}
+@attribute shift-differential {'\'(-inf-3.5]\'','\'(3.5-inf)\''}
+@attribute education-allowance {yes,no}
+@attribute statutory-holidays {'\'(-inf-10.5]\'','\'(10.5-inf)\''}
+@attribute vacation {below_average,average,generous}
+@attribute longterm-disability-assistance {yes,no}
+@attribute contribution-to-dental-plan {none,half,full}
+@attribute bereavement-assistance {yes,no}
+@attribute contribution-to-health-plan {none,half,full}
+@attribute class {bad,good}
+
+@data
+'\'All\'','\'(2.65-inf)\'',?,?,?,'\'All\'',?,?,'\'(-inf-3.5]\'',?,'\'(10.5-inf)\'',average,?,?,yes,?,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,?,'\'All\'',ret_allw,?,?,yes,'\'(10.5-inf)\'',below_average,?,full,?,full,good
+?,?,?,?,?,'\'All\'',empl_contr,?,'\'(3.5-inf)\'',?,'\'(10.5-inf)\'',generous,yes,half,yes,half,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(3.25-inf)\'',tc,?,?,?,?,yes,?,?,?,?,yes,?,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(3.25-inf)\'',?,'\'All\'',?,?,?,?,'\'(10.5-inf)\'',average,?,half,yes,half,good
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'',?,?,'\'All\'',?,?,'\'(3.5-inf)\'',yes,'\'(10.5-inf)\'',average,?,?,?,?,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(3.25-inf)\'',tc,?,empl_contr,?,?,?,'\'(10.5-inf)\'',generous,yes,none,yes,half,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(-inf-3.25]\'',?,'\'All\'',?,?,'\'(-inf-3.5]\'',?,'\'(10.5-inf)\'',below_average,?,?,?,?,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,?,'\'All\'',?,'\'(6-inf)\'','\'(3.5-inf)\'',yes,'\'(10.5-inf)\'',below_average,yes,half,yes,?,good
+'\'All\'','\'(2.65-inf)\'',?,?,none,'\'All\'',empl_contr,?,'\'(3.5-inf)\'',?,'\'(10.5-inf)\'',generous,yes,full,?,?,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(3.25-inf)\'',none,'\'All\'',?,?,'\'(-inf-3.5]\'',?,'\'(10.5-inf)\'',generous,?,?,yes,full,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,?,'\'All\'',?,?,'\'(3.5-inf)\'',?,'\'(10.5-inf)\'',?,?,full,?,?,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',?,?,'\'(-inf-3.5]\'',no,'\'(-inf-10.5]\'',below_average,no,half,?,half,bad
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(3.25-inf)\'',tcf,'\'All\'',?,?,'\'(3.5-inf)\'',?,'\'(10.5-inf)\'',generous,?,full,yes,full,good
+'\'All\'','\'(2.65-inf)\'',?,?,none,'\'All\'',?,?,'\'(3.5-inf)\'',no,'\'(10.5-inf)\'',generous,?,?,?,?,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',empl_contr,?,?,?,'\'(10.5-inf)\'',average,?,full,yes,?,good
+'\'All\'','\'(2.65-inf)\'',?,?,?,'\'All\'',?,?,'\'(-inf-3.5]\'',?,'\'(10.5-inf)\'',below_average,?,?,?,?,good
+'\'All\'','\'(-inf-2.65]\'',?,?,tc,'\'All\'',ret_allw,'\'(-inf-6]\'','\'(-inf-3.5]\'',no,'\'(-inf-10.5]\'',below_average,yes,half,?,none,bad
+'\'All\'','\'(-inf-2.65]\'',?,?,none,'\'All\'',none,?,?,yes,'\'(10.5-inf)\'',average,no,none,no,none,bad
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,tcf,'\'All\'',?,'\'(6-inf)\'','\'(3.5-inf)\'',?,'\'(10.5-inf)\'',generous,?,?,?,?,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,?,'\'All\'',?,?,'\'(3.5-inf)\'',?,'\'(10.5-inf)\'',generous,?,full,?,full,good
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'',?,?,'\'All\'',none,?,?,?,'\'(10.5-inf)\'',below_average,?,?,?,?,bad
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(3.25-inf)\'',tcf,'\'All\'',?,?,?,?,?,?,?,?,?,?,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,?,'\'All\'',?,?,'\'(3.5-inf)\'',?,'\'(-inf-10.5]\'',generous,?,half,?,full,good
+'\'All\'','\'(2.65-inf)\'',?,?,?,'\'All\'',?,'\'(6-inf)\'','\'(-inf-3.5]\'',?,'\'(-inf-10.5]\'',generous,?,?,?,?,good
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'','\'(-inf-3.25]\'',none,'\'All\'',none,?,?,?,'\'(-inf-10.5]\'',below_average,?,half,yes,full,bad
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,tcf,?,?,?,?,yes,'\'(-inf-10.5]\'',below_average,yes,none,?,half,good
+'\'All\'','\'(2.65-inf)\'','\'(-inf-3.25]\'',?,none,'\'All\'',?,?,?,yes,'\'(10.5-inf)\'',generous,?,?,yes,full,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',?,?,'\'(3.5-inf)\'',no,'\'(10.5-inf)\'',below_average,yes,full,yes,full,good
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'',?,?,'\'All\'',none,?,?,?,'\'(-inf-10.5]\'',average,?,?,yes,full,bad
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(3.25-inf)\'',none,'\'All\'',?,?,?,no,'\'(10.5-inf)\'',average,?,half,?,?,good
+'\'All\'','\'(2.65-inf)\'','\'(-inf-3.25]\'','\'(-inf-3.25]\'',tc,'\'All\'',none,?,'\'(3.5-inf)\'',no,'\'(-inf-10.5]\'',below_average,yes,half,yes,full,bad
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'',?,?,'\'All\'',empl_contr,?,?,?,'\'(-inf-10.5]\'',average,?,?,?,?,bad
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',none,?,'\'(-inf-3.5]\'',no,'\'(-inf-10.5]\'',below_average,no,none,?,none,bad
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'','\'(-inf-3.25]\'',tc,'\'All\'',none,'\'(-inf-6]\'','\'(-inf-3.5]\'',no,'\'(-inf-10.5]\'',below_average,no,half,yes,full,bad
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'',?,none,'\'All\'',none,?,?,no,'\'(10.5-inf)\'',average,yes,none,yes,full,bad
+'\'All\'','\'(-inf-2.65]\'',?,?,tc,'\'All\'',ret_allw,'\'(-inf-6]\'','\'(-inf-3.5]\'',no,'\'(10.5-inf)\'',generous,no,none,no,none,bad
+'\'All\'','\'(2.65-inf)\'',?,?,none,'\'All\'',empl_contr,'\'(-inf-6]\'','\'(-inf-3.5]\'',no,'\'(-inf-10.5]\'',below_average,yes,half,?,none,bad
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'','\'(-inf-3.25]\'',?,'\'All\'',empl_contr,?,?,?,'\'(-inf-10.5]\'',average,?,?,yes,none,bad
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',?,?,'\'(3.5-inf)\'',?,'\'(10.5-inf)\'',average,yes,full,yes,half,good
+'\'All\'','\'(2.65-inf)\'',?,?,none,?,none,?,?,yes,'\'(10.5-inf)\'',average,no,none,no,none,bad
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'',?,none,'\'All\'',empl_contr,?,?,yes,'\'(10.5-inf)\'',generous,yes,none,yes,full,bad
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'',?,tc,'\'All\'',empl_contr,?,?,?,'\'(10.5-inf)\'',average,?,?,yes,?,bad
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'',?,tcf,'\'All\'',none,?,?,?,'\'(10.5-inf)\'',below_average,?,?,yes,?,bad
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',none,?,'\'(-inf-3.5]\'',?,'\'(-inf-10.5]\'',below_average,no,none,?,none,bad
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,?,'\'All\'',?,?,'\'(-inf-3.5]\'',no,'\'(-inf-10.5]\'',below_average,no,half,?,half,bad
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',?,?,'\'(3.5-inf)\'',?,'\'(10.5-inf)\'',average,?,full,yes,full,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,tcf,'\'All\'',?,?,?,?,?,?,yes,half,?,half,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',?,'\'(6-inf)\'','\'(3.5-inf)\'',?,'\'(10.5-inf)\'',below_average,yes,?,?,full,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',ret_allw,?,?,?,'\'(10.5-inf)\'',average,yes,full,yes,full,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,?,?,?,?,?,?,'\'(10.5-inf)\'',?,yes,full,?,?,good
+'\'All\'','\'(-inf-2.65]\'','\'(-inf-3.25]\'',?,tcf,?,empl_contr,?,?,yes,?,?,yes,half,yes,?,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(3.25-inf)\'',tcf,'\'All\'',?,?,?,?,'\'(10.5-inf)\'',generous,?,?,yes,full,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',empl_contr,?,'\'(3.5-inf)\'',?,'\'(10.5-inf)\'',average,yes,full,?,full,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'',?,none,'\'All\'',empl_contr,'\'(6-inf)\'','\'(3.5-inf)\'',?,'\'(10.5-inf)\'',generous,yes,?,?,full,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(3.25-inf)\'',?,'\'All\'',?,?,?,?,'\'(10.5-inf)\'',average,?,half,yes,half,good
+'\'All\'','\'(2.65-inf)\'','\'(3.25-inf)\'','\'(3.25-inf)\'',?,'\'All\'',?,?,'\'(3.5-inf)\'',?,'\'(-inf-10.5]\'',generous,yes,full,yes,full,good

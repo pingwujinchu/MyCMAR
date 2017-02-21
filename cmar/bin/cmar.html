@@ -1,0 +1,528 @@
+<HTML>
+<HEAD>
+<TITLE>Apriori-TFP Association Rule Mining (ARM) Software:
+The CMAR Algorithm</TITLE>
+</HEAD><BODY BGCOLOR="white">
+<CENTER><TABLE BORDER = 0 cellpadding = 10 WIDTH="100%">
+<TR><TD BGCOLOR = BB0000>
+<CENTER><TABLE BORDER = 0 cellpadding = 10 WIDTH="90%">
+<TR><TD BGCOLOR = 006699>
+<FONT COLOR = "white">
+<CENTER>
+<H1>THE LUCS-KDD IMPLEMENTATIONS OF THE CMAR ALGORITHM (VERSION 2)</H1>
+<HR WIDTH=<50%">
+<BR></CENTER>
+<TABLE ALIGN=right BGCOLOR="white" BORDER=1 CELLPADDING=5>
+<TR><TD>
+<img src="../../../GifFolder/logo115.gif"
+	alt="Liverpool University">
+</TD></TABLE>
+<P><B><I>Frans Coenen<I></B></P>
+<P><B>Department of Computer Science</B></P>
+<P><B>The University of Liverpool</B></P>
+<P>Tuesday 27 April 2004</P>
+<P>Updated: Wednesday 3 December 2008, Monday 1 June 2009, 
+Saturday 3 February 2012.</P>
+</FONT></TD>
+</TABLE></CENTER>
+</TD></TABLE>
+</CENTER>
+
+<P><B>DISCLAIMER!</B> The following description of the CMAR algorithm
+(Li et al 2001) is that
+implemented by the author of this WWW page, i.e. it is not identical
+to that first produced by  Wenmin Li, Jiawei Han and Jian Pei,
+but certainly displays
+all the "salient" features of the CMAR algorithm.</P>
+
+<BR>
+<h2>CONTENTS</h2>
+<table BORDER=0 CELLPADDING=0 WIDTH=100%>
+
+<tr><td WIDTH="48%">
+<dl>
+<DT>1. <a HREF = "#introduction">Introduction</A>.</DT>
+<DL>
+<DT>1.1. <a HREF = "#cmar1">Overview of CMAR</A>.</DT>
+<DT>1.2. <a HREF = "#cmar2">Overview of LUCS-KDD implementation of CMAR</A>.</DT>
+</DL>
+<DT>2. <a HREF = "#downloading">
+Downloading the software</A>.</DT>
+</dl>
+</td><td><pre> </pre></td><td>
+<dl>
+<DL>
+<DT>2.1. <a HREF = "#compiling">Compiling</A>.</DT>
+<DT>2.2. <a HREF = "#documentation">Documentation</A>.</DT>
+</DL>
+<DT>3. <a HREF = "#running">Running the software</A>.</DT>
+<DT>4. <a HREF = "#version1">Version 1</A>.</DT>
+<DT>4. <a HREF =" #conclusions">Conclusions</A>.</DT>
+</dl>
+</td></table><br><hr><br>
+
+<a NAME = "introduction">
+<table BORDER-=0 WIDTH="100%" CELLPADDING=5 BGCOLOR="006699">
+<tr><td><h2><font color =" white">1. INTRODUCTION</font></h2></td>
+</table><BR>
+
+<P>CMAR (Classification based on Multiple Association Rules) is a
+Classification Association Rule Mining (CARM) algorithm developed by
+Wenmin Li, Jiawei Han and Jian Pei (Li et al. 2001). CMAR operates using a
+two stage approach to generating a classifier:</P>
+
+<OL>
+<LI>Generating the complete set of CARs according to a user supplied:
+<OL TYPE="a">
+<LI>Support threshold to determine frequent (large) item sets, and
+<LI>Confidence threshold to confirm CRs.
+</OL>
+<LI>Prune this set to produce a classifier.
+</OL>
+
+<P>The two stage approach is a fairly common approach used by many CARM algorithms,
+for example the CBA
+(Classification Based on Associations) algorithm (Liu et al 1998).</P>
+
+<P>CMAR makes significant use of the statistical concept of <I>Chi-squared</I>
+testing --- for readers that are not familiar with this concept it is
+recommended that they refer to
+<A HREF = "http://www.csc.liv.ac.uk/~frans/Notes/chiTesting.html">
+http://www.csc.liv.ac.uk/~frans/Notes/chiTesting.html</A>.</P>
+
+<BR>
+<a NAME = "cmar1">
+<H3>1.1. Overview of CMAR</H3>
+
+<P>The CMAR algorithm (as described in Li et al 2001) uses an FP-growth
+algorithm (Han et al. 2000) to produce a set of CARs which are stored in
+data structure referred to as a CR tree. CARs are inserted into the CR tree if:
+
+<OL>
+<LI>The Chi-Squared value is above a user specified critical threshold
+(Li et al. suggest a 5% <I>significance</I> level; assuming a <I>degree of
+freedom</I> equivalent to 1, this will equate to a threshold of
+<TT>3.8415</TT>), and
+<LI>The CR tree does not contain a more general rule with a higher
+priority.
+</OL>
+
+<P>Given two CARs, <TT>R1</TT> and <TT>R2</TT>, <TT>R1</TT> is said to be a
+more general rule than <TT>R2</TT> if the antecedent for <TT>R1</TT> is a subset
+of the antecedent for <TT>R2</TT>. In CMAR CARS are prioritised using the following
+ordering:</P>
+
+<OL>
+<LI><B>Confidence</B>: A rule <TT>r1</TT> has priority over a rule <TT>r2</TT> if
+<TT>confidence(r1) &gt; confidence(r2)</TT>.
+<LI><B>Support</B>: A rule <TT>r1</TT> has priority over a rule <TT>r2</TT> if
+<TT>confidence(r1)==confidence(r2) &amp;&amp; support(r1)&gt;support(r2)</TT>.
+<LI><B>Size of antecedent</B>: A rule <TT>r1</TT> has priority over a rule
+<TT>r2</TT> if <TT>confidence(r1)==confidence(r2) &amp;&amp;
+support(r1)==support(r2) &amp;&amp; |A<SUB>r1</SUB>|&lt;|A<SUB>r2</SUB>|</TT>.
+</OL>
+
+<P>(A similar ordering to that used in CBA).</P>
+
+Once a complete CR tree has been produced the generated rules are placed
+into a list <TT>R</TT>, ordered according to the above prioritisation, which
+is then pruned. The pruning algorithm (using the <I>cover</I>
+principle) is presented in Table 1.</P>
+
+<CENTER>
+<TABLE BORDER=1><TR><TD>
+<TABLE BORDER=1 CELLPADDING=10><TR><TD>
+<PRE>
+T set of training records
+C array of length |T| with value of elements set to 0
+R The prioritised rule list
+R' empty rule list
+For each r in R
+    if (T=null) break;
+    coverFlag <-- false
+    for each ti in T Loop (1 <= i <= [T|)
+    	if (r.antecedent subset ti) rule satisfies record
+    	    C[i] <-- C[i]+1
+    	    coverFlag <-- true
+    End loop
+    if (coverFlag=true) rule satisfies at least one record
+        R' <-- R' union r
+    Loop from i<--1 to i<--|c| in steps of 1
+        if ci> MIN_COVER remove ti from T
+   End loop
+</PRE>
+</TD></TABLE>
+</TD></TABLE>
+<P><B>Table 1</B>: <I>CMAR rule pruning using the "cover" principle</I>.</P>
+</CENTER><BR>
+
+<P><TT>R'</TT> is then the resulting classifier. In their experiments
+Li et al. used a <TT>MIN_COVER</TT> value of <TT>3</TT>, i.e. each record
+had to be satisfied (covered) by at least three rules before it is
+no longer to be considered in the generation process and removed from the
+training set.</P>
+
+<P>To test the resulting classifier Li et al. propose the following
+process. Given a record <TT>r</TT> in the test set:</P>
+
+<OL>
+<LI>Collect all rules that satisfy <TT>r</TT>, and
+    <OL type="i">
+    <LI>If consequents of all rules are all identical, or
+    only one rule, classify record according to the consequents.
+    <LI>Else group rules according to classifier and determine the combined
+    effect of the rules in each group, the classifier associated with
+    the "strongest group" is then selected.
+    </OL>
+</OL>
+
+<P>The strength of a group is calculate using a <I>Weighted Chi Squared</I>
+(WCS) measure. This is done by first defining a <I>Maximum Chi Squared </I>
+(MCS) value for each rule <TT>A->c</TT>:</P>
+
+<PRE>
+MCS = (min(sup(A),sup(c)) - sup(A)sup(c)/N)^2 * N * e
+</PRE>
+
+<P>Where:</P>
+<OL>
+<LI><TT>sup(P)</TT> = support for antecedent.
+<LI><TT>sup(c)</TT> = support for consequent.
+<LI><TT>N</TT> = Number of records in test set.
+<LI><TT>e</TT> is calculated as follows:
+</OL>
+
+<PRE>
+e = 1/sup(A)sup(c) + 1/sup(A)N-sup(c) + 1/N-sup(A)sup(c) +
+	1/(N-sup(A))(N-sup(c))
+</PRE>
+
+<P>For each group of rules the Weighted Chi Squared value is defined as:</P>
+
+<PRE>
+WCS = The sum of (Chi-Squared * Chi-Squared)/(MCS)
+</PRE></P>
+
+<BR>
+<a NAME = "cmar2">
+<H3>1.2. Overview of LUCS-KDD implementation of CMAR</H3>
+
+<P>The LUCS-KDD implementation of CMAR operates in exactly the same manner as
+described above except that the CARs are generated using the <A HREF =
+"../Apriori-TFP">
+Apriori-TFP</A> algorithm (Coenen et al. 2001, Coenen et al. 2004 and Coenen
+and Leng 2004) and placed directly into the
+rule list <TT>R</TT>, whereas the original CMAR algorithm used a
+variation of FP-growth (Han et al. 2000).</P>
+
+<br><hr><br>
+<a NAME ="downloading">
+<table BORDER-=0 WIDTH="100%" CELLPADDING=5 BGCOLOR="006699">
+<tr><td><h2><font color =" white">2. DOWNLOADING THE SOFTWARE</font></h2></td>
+</table><BR>
+
+<P>The LUCS KDD CMAR software comprises nine source files. These are provided
+from this WWW page together with three application classes. The source files are
+as follows:</P>
+
+<OL>
+<LI><A HREF = "AssocRuleMining.java"><TT>AssocRuleMining.java</TT></A>:
+Set of general ARM utility methods to allow: (i) data input and input
+error checking, (ii) data preprocessing, (iii) manipulation of records (e.g.
+operations such as subset, member, union etc.) and (iv) data and parameter
+output.
+<LI><A HREF = "PartialSupportTree.java"><TT>PartialSupportTree.java</TT></A>:
+Methods to implement the "Apriori-TFP" algorithm using both the "Partial
+support" and "Total support" tree data structure (P-tree and T-tree).
+<LI><A HREF = "PtreeNode.java"><TT>PtreeNode.java</TT></A>: Methods concerned
+with the structure of Ptree nodes.
+<LI><A HREF = "PtreeNodeTop.java"><TT>PtreeNodeTop.java</TT></A>: Methods
+concerned with the structure of the top level of the P-tree which comprises, to
+allow direct indexing for reasons
+of efficiency, an array of "top P-tree nodes".
+<LI><A HREF = "RuleNode.java"><TT>RuleNode.java</TT></A>: Class for storing 
+binary tree of CARs as appropriate. (Used to
+be defined as an inner class in AssocRuleMining class.)
+<LI><A HREF = "TotalSupportTree.java"><TT>TotalSupportTree.java</TT></A>:
+Methods to implement the "Apriori-T"
+algorithm using the "Total support" tree data structure (T-tree).
+<LI><A HREF = "TtreeNode.java"><TT>TtreeNode.java</TT></A>: Methods concerned
+with the structure of Ttree nodes.
+<LI><A HREF = "AprioriTFPclass.java"><TT>AprioriTFPclass.java</TT></A>: Parent
+class for classification rule generator.
+<LI><A HREF = "AprioriTFP_CMAR.java"><TT>AprioriTFP_CMAR.java</TT></A>:
+Methods to produce classification rules using Wenmin Li, Jiawei Han and 
+Jian Pei's CMAR (Classification based on Multiple associate Rules) algorithm 
+but founded on Apriori-TFP.
+<LI><A HREF = "AprioriTFP_CARgen.java"><TT>AprioriTFP_CARgen</TT></A>: 
+Methods to produce classification rules using a Apriori-TFP appraoch.
+</OL>
+
+<P>The <TT>PtreeNode</TT>, <TT>PtreeNodeTop</TT> and <TT>TtreeNode</TT>
+classes are separate to the remaining classes which are
+arranged in a class hierarchy of the form illustrated below.</P>
+
+<CENTER>
+<TABLE BORDER=1><TR><TD>
+<TABLE BORDER=1 CELLPADDING=10><TR><TD>
+<PRE>
+        	AssocRuleMining
+               		|
+	+---------------+----------------+
+	|                                |
+TotalSupportTree                     RuleList
+	|
+PartialSupportTree
+	|
+AprioriTFPclass
+	|
+AprioriTFP_CMAR
+</PRE>
+</TD></TABLE>
+</TD></TABLE></CENTER><BR>
+
+<P>The Apriori-TFPC CMAR application classes included here are as follows:</P>
+
+<OL>
+<LI><A HREF = "ClassCMAR_2file_App.java"><TT>ClassCMAR_2file_App.java</TT></A>:
+Prooduces a single-class clasifier from a given data set given particular 
+support and confidence thresholds as input using the CMAR algorithm. Takes 
+two input files: (i) training set, (ii) test set.
+<LI><A HREF = "ClassCMAR_App.java"><TT>ClassCMAR_App.java</TT></A>:
+Fundamental LUCS-KDD CMAR application using a 50:50 training/test set split.
+<LI><A HREF = "ClassCMAR_App10.java"><TT>ClassCMAR_App10.java</TT></A>:
+LUCS-KDD CMAR application using TCV (Ten Cross Validation).
+<LI><A HREF = "ClassOnlyCMAR_App.java"><TT>ClassOnlyCMAR_App.java</TT></A>:
+LUCS-KDD CMAR application that creates a classifier using the entire data
+set (no measure of accuracy).
+</OL>
+
+<P>There is also a "tar ball" <A HREF = "cmar.tgz">cmar.tgz</A>
+that can be downloaded that includes all of the above source and application
+class files. It can be unpacked using <TT>tar -zxf cmar.tgz</TT>.</P>
+
+<BR>
+<a NAME = "compiling">
+<H3>2.1. Compiling</H3>
+<P>The LUCS-KDD CMAR software has been implemented in Java using the Java2 SDK
+(Software Development Kit) Version 1.4.0, which should therefore make it highly
+portable. The code does not require any special packages and thus can be
+compiled using the standard Java compiler:</p>
+
+<pre>
+javac *.java
+</pre>
+
+<BR>
+<a NAME = "documentation">
+<H3>2.2. Documentation</H3>
+
+<P>The code can be documented using <I>Java Doc</I>. First create a directory
+<TT>Documentation</TT> in which to place the resulting HTML pages and then type:</P>
+
+<PRE>
+javadoc -d Documentation/ *.java
+</PRE>
+
+<P>This will produce a hierarchy of WWW pages contained in the <TT>Document</TT>
+directory.</P>
+
+<br><hr><br>
+<a NAME ="running">
+<table BORDER-=0 WIDTH="100%" CELLPADDING=5 BGCOLOR="006699">
+<tr><td><h2><font color =" white">3. RUNNING THE SOFTWARE</font></h2></td>
+</table><BR>
+
+<P>When compiled the software can be invoked in the normal manner using the
+Java interpreter:</p>
+
+<pre>
+java APPLICATION_CLASS_FILE_NAME -F FILE_NAME -N NUMBER_OF_CLASSES
+</pre>
+
+<P>For example:</P>
+
+<PRE>
+java ClassCMAR_App -FpimaIndians.D42.N768.C2.num -N2
+</PRE>
+
+<P>The <TT>-F</TT> flag is used to input the name of the data file
+to be used, and the <TT>-N</TT> flag to input the number of classes
+represented within the input data.</P>
+
+<P>If you planning to process a very large data set it is a good idea to
+grab some extra memory. Thus:</p>
+
+<pre>
+java -Xms600m -Xmx600m APPLICATION_CLASS_FILE_NAME -F FILE_NAME
+				-N NUMBER_OF_CLASSES
+</pre>
+
+<P>For example:</P>
+
+<PRE>
+java -Xms600m -Xmx600m ClassCMAR_App10 -FpimaIndians.D42.N768.C2.num -N2
+</PRE>
+
+<P>In the case of <TT>ClassCMARfull_App10</TT> the output can be extensive so 
+it is a good idea the direct the output to a file. For example:</p>
+
+<pre>
+java ClassCMAR_App10 -FpimaIndians.D42.N768.C2.num -N2 > myFile
+</pre>
+
+<P>The input to the software, in all cases is a (space separated)
+<I>binary valued</I> data set <TT>T</TT>. The set <TT>T</TT>
+comprises a set of <TT>N</TT> records such that each record (<TT>t</TT>),
+in turn, comprises a set of <I>attributes</I>. Thus:</P>
+
+<PRE>
+T  = {t | t = subset A}
+</PRE>
+
+<P>Where <TT>A</TT> is the set of available attributes. The value <TT>D</TT> is
+then defined as:
+
+<PRE>
+D = |A|
+</PRE>
+
+<P>We then say that a particular data set has <TT>D</TT> <I>columns</I> and
+<TT>N</TT> <I>rows</I>. A small example data sets might be as follows:</P>
+
+<PRE>
+1 2 3 6
+1 4 5 7
+1 3 4 6
+1 2 6
+1 2 3 4 5 7
+</PRE>
+
+<P>where, in this case, <TT>A = {1, 2, 3, 4, 5, 6, 7}</TT> of which <TT>6</TT>
+and <TT>7</TT> represent the possible classes (the class attributes). 
+<B><FONT COLOR="red">Note that attribute numbers are ordered sequentially 
+commencing with the number <TT>1</TT></FONT></B> (the value <TT>0</TT> has a special meaning). 
+<B><FONT COLOR="red">This includes the class attributes</FONT></B> which should 
+follow on from the last attribute number as in the above
+example. It is not a good idea to assign some very high value to the class
+attributes that guarantees that they are numerically after the last attribute
+number as this introduces inefficiencies into the code. For example, if in the
+above case, the class numbers are <TT>1001</TT> and <TT>1002</TT> (instead of 
+<TT>6</TT> and <TT>7</TT> respectively) the algorithm will assume that there 
+are <TT>1002</TT> attributes in total in which case there will be 
+<TT>2^1002 - 1</TT> candidate frequent item sets (instead of 
+only <TT>2^7 - 1</TT> candidate sets).</P>
+
+<P>The program assumes support and confidence default threshold values of 20% and
+80% respectively. However the user may enter their own thresholds using
+the <TT>-S</TT> and <TT>-C</TT> flags. Thresholds are expressed as percentages.</P>
+
+<P>By default the program reorders the input according to frequency (this makes
+the software much more efficient), however this can be stopped by commenting out
+the lines:</P> 
+
+<PRE>
+newClassification.idInputDataOrdering();  // ClassificationAprioriT
+newClassification.recastInputData();      // AssocRuleMining
+</PRE>
+
+
+<P>Some example invocations, using a discretized/ normalised version of the Pima Indians
+data set (also <A HREF = "pimaIndians.D42.N768.C2.num">available</A> from this
+site, the raw data can be obtained from the
+<A HREF = "http://www.ics.uci.edu/~mlearn/MLRepository.html">
+UCI Machine learning Repository</A>
+(Blake and Merz 1998)) and the three application classes provided by this WWW site, are
+given below:</P>
+
+<PRE>
+java ClassCMAR_App -FpimaIndians.D42.N768.C2.num -N2 -S1 -C50
+java ClassCMAR_App10 -FpimaIndians.D42.N768.C2.num -N2
+java ClassOnlyCMAR_App.java  -FpimaIndians.D42.N768.C2.num -N2 -S5
+</PRE>
+
+<P>(note that the ordering of flags is not significant). The output from each
+application is a set of CRs (ordered according to the prioritisation given
+in Sub-section 1.1) plus some diagnostic
+information (run time, number of rules generated etc.).</P>
+
+<br><hr><br>
+<A name = "version1">
+<table BORDER-=0 WIDTH="100%" CELLPADDING=5 BGCOLOR="006699">
+<tr><td><h2><font color =" white">4. VERSIPN 1</font></h2></td>
+</table> <BR>
+
+<P>This is Version 2 of the software. Differences between this and Version 1
+are: (i) More sophisticated way of conducting TCV, (ii) capability of inpitting
+seperate training and test data files, (iii) better statistical analysis of end 
+results AUC values, etc.). Versiopn 1 is still 
+<A HREF = "OldVersion2009/camr.html">available</A>.</P> 
+
+
+<br><hr><br>
+<A name = "conclusions">
+<table BORDER-=0 WIDTH="100%" CELLPADDING=5 BGCOLOR="006699">
+<tr><td><h2><font color =" white">5. CONCLUSIONS</font></h2></td>
+</table> <BR>
+
+<P>The LUCS-KDD implementation of the CMAR algorithm described here
+has been used successfully by the LUCS-KDD research group to contrast and
+compare a variety of classification algorithms and techniques. The software is
+available for free, however the author
+would appreciate appropriate acknowledgment. The following reference format
+for referring to the LUCS-KDD implementation of CMAR, available from this WWW
+page, is suggested:</P>
+
+<OL>
+<LI>Coenen, F. (2004). <I>LUCS KDD implementation of CMAR
+(Classification based on Multiple Association Rules)</I>.
+http://www.csc.liv.ac.uk/~frans/KDD/Software/CMAR/cmar.html,
+Department of Computer Science, The University of Liverpool, UK.
+</OL>
+
+<P>Should you discover any "bugs" or other problems within the software (or this
+documentation), do not hesitate to contact
+the author.</P>
+
+<br><hr><br>
+<table BORDER-=0 WIDTH="100%" CELLPADDING=5 BGCOLOR="006699">
+<tr><td><h2><font color =" white">REFERENCES</font></h2></td>
+</table> <BR>
+
+<OL>
+<LI>Blake, C.L. and Merz, C.J. (1998).
+<I>UCI Repository of machine learning databases</I>.
+http://www.ics.uci.edu/~mlearn/MLRepository.html,
+Irvine, CA: University of California, Department of Information and
+Computer Science.
+<LI>Coenen, F., Goulbourne, G. and Leng, P. (2001).
+<I>Computing Association Rules Using Partial Totals.</I>
+In de Raedt, L. and Siebes, A. (Eds), Principles of Data Mining and
+Knowledge Discovery, Proc PKDD 2001, Spring Verlag LNAI 2168, pp 54-66.
+<LI>Coenen and Leng (2004).
+<I>Data Structures for Association Rule Mining:
+T-trees and P-trees</I>
+To appear in IEEE Transaction in Knowledge and Data Engineering.
+<LI>Coenen, F., Leng, P., Goulbourne, G. (2004).
+<I>Tree Structures for Mining Association Rules.</I>
+Journal of Data Mining and Knowledge Discovery, Vol 15 (7), pp391-398.
+<LI>Han, J., Pei, J. and Yiwen, Y. (2000).
+<I>Mining Frequent Patterns Without Candidate Generation</I>.
+Proceedings ACM-SIGMOD International Conference on 
+Management of Data, ACM Press,
+pp1-12.
+<LI>Liu, B. Hsu, W. and Ma, Y (1998). 
+<I>Integrating Classification and Association Rule Mining.</I>
+Proceedings KDD-98, New York, 27-31 August. AAAI. pp80-86.
+<LI>Li W., Han, J. and Pei, J. (2001).
+<I>CMAR: Accurate and Efficient Classification Based on Multiple
+Class-Association Rules.</I>
+Proc ICDM 2001, pp369-376.
+</OL>
+
+<br><hr><br>
+<P>Created and maintained by
+<a HREF=http://www.csc.liv.ac.uk/~frans/>Frans Coenen</A>.
+Last updated 5 May 2004
+</body>
+</html>

@@ -1,0 +1,33 @@
+@relation lenses
+   
+@attribute age{1, 2, 3}
+@attribute spectacle{1, 2}
+@attribute astigmatic {1, 2}
+@attribute tear-production-rate{1, 2}
+@attribute class{1, 2, 3}
+
+@data
+1  1  1  1  3
+1  1  1  2  2
+1  1  2  1  3
+1  1  2  2  1
+1  2  1  1  3
+1  2  1  2  2
+1  2  2  1  3
+1  2  2  2  1
+2  1  1  1  3
+2  1  1  2  2
+2  1  2  1  3
+2  1  2  2  1
+2  2  1  1  3
+2  2  1  2  2
+2  2  2  1  3
+2  2  2  2  3
+3  1  1  1  3
+3  1  1  2  3
+3  1  2  1  3
+3  1  2  2  1
+3  2  1  1  3
+3  2  1  2  2
+3  2  2  1  3
+3  2  2  2  3
