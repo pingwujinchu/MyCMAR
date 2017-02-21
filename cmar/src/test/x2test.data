@@ -1,0 +1,9 @@
+@relation weather-weka.filters.supervised.attribute.Discretize-Rfirst-last
+
+@attribute outlook {sunny,overcast,rainy}
+@attribute temperature {hot,mild,cool}
+@attribute humidity {high,normal}
+@attribute windy {true,false}
+@attribute play {yes,no}
+@data
+sunny,hot,high,false,no

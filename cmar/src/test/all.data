@@ -1,0 +1,9 @@
+@relation iris-weka.filters.supervised.attribute.Discretize-Rfirst-last
+
+@attribute sepallength {'\'(-inf-5.55]\'','\'(5.55-6.15]\'','\'(6.15-inf)\''}
+@attribute sepalwidth {'\'(-inf-2.95]\'','\'(2.95-3.35]\'','\'(3.35-inf)\''}
+@attribute petallength {'\'(-inf-2.45]\'','\'(2.45-4.75]\'','\'(4.75-inf)\''}
+@attribute petalwidth {'\'(-inf-0.8]\'','\'(0.8-1.75]\'','\'(1.75-inf)\''}
+@attribute class {Iris-setosa,Iris-versicolor,Iris-virginica}
+
+@data
